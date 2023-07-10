@@ -1,0 +1,112 @@
+{
+  "id": "plugin-delta-sharing",
+  "displayName": "Delta Sharing",
+  "description": "Publisher which connects to Delta Sharing",
+  "apiVersion": "1",
+  "versionDescription": "Version 1",
+  "version": "1.0.0",
+  "iconFile": "icon.png",
+  "executable": "PluginDeltaSharing",
+  "kind": "publisher",
+  "os": "$GOOS",
+  "arch": "$GOARCH",
+  "accessGroups": [],
+  "canConfigure": true,
+  "canProduceMultipleSchemas": true,
+  "canAcceptQueryBasedSchemas": false,
+  "canUseOAuth": false,
+  "canConfigureWrite": false,
+  "canWrite": false,
+  "canConfigureReplication": false,
+  "canWriteReplication": false,
+  "querySchema": {
+    "ui": {
+      "ui:widget": "code",
+      "ui:options": {
+        "language": "sql"
+      }
+    },
+    "schema": {
+      "type": "string"
+    }
+  },
+  "configSchema": {
+    "ui": {
+      "ui:order": [
+        "share_configuration",
+        "profile_file_path",
+        "bearer_token",
+        "endpoint",
+        "share_credentials_version"
+      ],
+      "BearerToken": {
+        "ui:widget": "password"
+      }
+    },
+    "schema": {
+      "type": "object",
+      "properties": {
+        "share_configuration": {
+          "type": "string",
+          "title": "Select an option to configure the sharing credential",
+          "enum": [
+            "File Path",
+            "Share Info"
+          ],
+          "default": "File Path"
+        }
+      },
+      "required": [
+        "share_configuration"
+      ],
+      "dependencies": {
+        "share_configuration": {
+          "oneOf": [
+            {
+              "properties": {
+                "share_configuration": {
+                  "enum": [
+                    "File Path"
+                  ]
+                },
+                "profile_file_path": {
+                  "type": "string",
+                  "title": "Full path of the share file in the server"
+                }
+              },
+              "required": [
+                "profile_file_path"
+              ]
+            },
+            {
+              "properties": {
+                "share_configuration": {
+                  "enum": [
+                    "Share Info"
+                  ]
+                },
+                "bearer_token": {
+                  "type": "string",
+                  "title": "Bearer Token"
+                },
+                "endpoint": {
+                  "type": "string",
+                  "title": "Endpoint"
+                },
+                "share_credentials_version": {
+                  "type": "integer",
+                  "title": "Share Credentials Version"
+                }
+              },
+              "required": [
+                "bearer_token",
+                "endpoint",
+                "share_credentials_version"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
