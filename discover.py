@@ -7,10 +7,6 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 
 
-class Discover:
-    pass
-
-
 def get_type(data_type: str) -> pb2.PropertyType:
     try:
         data_type = data_type.lower()
@@ -78,7 +74,7 @@ def read_df(table_url, limit):
     return df
 
 
-def get_all_schemas(api_client_factory: ApiClientFactory, sample_size: int = 5):
+def get_all_schemas_concurrent(api_client_factory: ApiClientFactory, sample_size: int = 5):
     api_client = api_client_factory.get_api_client()
     schemas = []
     tables = api_client.sharing_client.list_all_tables()
@@ -129,42 +125,42 @@ def get_all_schemas(api_client_factory: ApiClientFactory, sample_size: int = 5):
     return schemas
 
 
-# def get_all_schemas(api_client_factory: ApiClientFactory, sample_size: int = 5):
-#     api_client = api_client_factory.get_api_client()
-#     schemas = []
-#     tables = api_client.sharing_client.list_all_tables()
-#
-#     schema = None
-#
-#     for table in tables:
-#         schema_id = f'{table.share}.{table.schema}.{table.name}'
-#         print(f'schema:{schema_id}')
-#         schema = pb2.Schema(id=schema_id, name=schema_id, data_flow_direction=pb2.Schema.DataFlowDirection.READ)
-#         schemas.append(schema)
-#
-#         table_url = api_client.profile_file + f'#{schema_id}'
-#         print(f'table url:{table_url}, sample size:{sample_size}')
-#
-#         df = read_df(table_url, sample_size)
-#         print(f'processing table:{schema.id}, number of columns:{len(df.columns)}, number of rows:{len(df)}')
-#         try:
-#             for col in df.columns:
-#                 type_at_source = str(df[col].dtype)
-#                 # print(f'column:{col}, data type:{type_at_source}')
-#                 type_at_dest = get_type(type_at_source)
-#                 # print(f'type at dest:{type_at_dest}, data type:{type(type_at_dest)}, check:{type(pb2.PropertyType.STRING)}')
-#                 column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
-#                 # print(f'column property created:{type(column_property)}')
-#                 schema.properties.append(column_property)
-#                 # print(f'properties extended')
-#
-#             for index, record in df.iterrows():
-#                 data = json.dumps(record.to_dict(), default=str)
-#                 record = pb2.Record(data_json=data)
-#                 schema.sample.append(record)
-#         except Exception as e:
-#             print(f'error in discover:{e}')
-#     return schemas
+def get_all_schemas(api_client_factory: ApiClientFactory, sample_size: int = 5):
+    api_client = api_client_factory.get_api_client()
+    schemas = []
+    tables = api_client.sharing_client.list_all_tables()
+
+    schema = None
+
+    for table in tables:
+        schema_id = f'{table.share}.{table.schema}.{table.name}'
+        print(f'schema:{schema_id}')
+        schema = pb2.Schema(id=schema_id, name=schema_id, data_flow_direction=pb2.Schema.DataFlowDirection.READ)
+        schemas.append(schema)
+
+        table_url = api_client.profile_file + f'#{schema_id}'
+        print(f'table url:{table_url}, sample size:{sample_size}')
+
+        df = read_df(table_url, sample_size)
+        print(f'processing table:{schema.id}, number of columns:{len(df.columns)}, number of rows:{len(df)}')
+        try:
+            for col in df.columns:
+                type_at_source = str(df[col].dtype)
+                # print(f'column:{col}, data type:{type_at_source}')
+                type_at_dest = get_type(type_at_source)
+                # print(f'type at dest:{type_at_dest}, data type:{type(type_at_dest)}, check:{type(pb2.PropertyType.STRING)}')
+                column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
+                # print(f'column property created:{type(column_property)}')
+                schema.properties.append(column_property)
+                # print(f'properties extended')
+
+            for index, record in df.iterrows():
+                data = json.dumps(record.to_dict(), default=str)
+                record = pb2.Record(data_json=data)
+                schema.sample.append(record)
+        except Exception as e:
+            print(f'error in discover:{e}')
+    return schemas
 
 
 def get_count_of_records(api_client_factory: ApiClientFactory, schema: pb2.Schema):

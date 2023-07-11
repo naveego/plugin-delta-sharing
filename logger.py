@@ -1,15 +1,18 @@
 import logging
 import logging.handlers
+import os.path
 import sys
 import pathlib
 import publisher_pb2 as pb2
+import grpc
 
 
 class PluginLogger:
 
     def __init__(self, name: str = '', log_path: str = 'logs'):
         self.__log_prefix: str = ''
-        self.__file_name: str = pathlib.PurePath(sys.path[1]).name + "-log.txt"
+        # self.__file_name: str = pathlib.PurePath(sys.path[1]).name + "-log.txt"
+        self.__file_name: str = os.path.basename(os.getcwd()) + "-log.txt"
         self.__level = pb2.LogLevel.Info
 
         if not name:
@@ -40,7 +43,7 @@ class PluginLogger:
         if self.__level == pb2.LogLevel.Error:
             return logging.ERROR
         elif self.__level == pb2.LogLevel.Warn:
-            return logging.WARN
+            return logging.WARNING
         elif self.__level == pb2.LogLevel.Info:
             return logging.INFO
         elif self.__level == pb2.LogLevel.Debug:
@@ -49,19 +52,21 @@ class PluginLogger:
             return logging.NOTSET
 
     def debug(self, message: str):
-        print(f'level:{self.__level}, enum:{logging.DEBUG}')
-        # if self.__level < logging.DEBUG:
-        #     return
         self.__logger.debug(f'{self.__log_prefix} {message}')
 
     def info(self, message: str):
-        # if self.__level < logging.INFO:
-        #     return
         self.__logger.info(f'{self.__log_prefix} {message}')
 
+    def warn(self, message: str):
+        self.__logger.warning(f'{self.__log_prefix} {message}')
+
     def error(self, message: str):
-        # if self.__level < logging.ERROR:
-        #     return
+        self.__logger.error(f'{self.__log_prefix} {message}')
+
+    def error(self, message: str, context):
+        context.set_code(grpc.StatusCode.UNKNOWN)
+        context.set_details(message)
+
         self.__logger.error(f'{self.__log_prefix} {message}')
 
     def set_log_level(self, level):

@@ -29,7 +29,7 @@ if __name__ == '__main__':
         logger.info('Plugin exiting.....')
 
         # shutdown server
-        server.stop()
+        server.wait_for_termination(3)
 
     except Exception as e:
         logger.error(str(e))
