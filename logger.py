@@ -18,7 +18,7 @@ class PluginLogger:
         if not name:
             name = self.__file_name
 
-        print(f'name:{name}, path:{log_path}')
+        # print(f'name:{name}, path:{log_path}')
         # ensure log directory exists
         pathlib.Path(log_path).mkdir(parents=True, exist_ok=True)
 
