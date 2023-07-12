@@ -19,7 +19,7 @@ if __name__ == '__main__':
         server.start()
 
         # write out the connection information for the Hashicorp plugin runner
-        output = f'1|1|tcp|localhost|{port}|grpc'
+        output = f'1|1|tcp|localhost:{port}|grpc'
         print(output)
         logger.info(f'Started on port {port}')
 
