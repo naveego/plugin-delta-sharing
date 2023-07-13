@@ -21,5 +21,4 @@ class DeltaSharingIntegrationTestServer:
 
 
 if __name__ == '__main__':
-    print('Testing grpc server delta_sharing_test')
     DeltaSharingIntegrationTestServer.start_server()

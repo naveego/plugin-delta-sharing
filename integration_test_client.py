@@ -1,13 +1,10 @@
 import json
 import grpc
-import datetime
 
 import publisher_pb2 as pb2
 import publisher_pb2_grpc as pb2_grpc
 from settings import Settings, SettingsEncoder
 import unittest
-import os
-import sys
 
 
 def get_wrong_settings():
@@ -55,6 +52,7 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
         settings_json = json.dumps(settings, cls=SettingsEncoder)
         connect_request = pb2.ConnectRequest(settings_json=settings_json, oauth_state_json='')
         connect_response = stub.Connect(connect_request)
+
         self.assertIsInstance(connect_response, pb2.ConnectResponse)
         self.assertEqual(connect_response.settings_error, '')
         self.assertEqual(connect_response.connection_error, '')
@@ -71,9 +69,8 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
         settings_json = json.dumps(settings, cls=SettingsEncoder)
         connect_request = pb2.ConnectRequest(settings_json=settings_json, oauth_state_json='')
         connect_response = stub.Connect(connect_request)
+
         self.assertIsInstance(connect_response, pb2.ConnectResponse)
-        print(f'settings:{connect_response.settings_error}, connect:{connect_response.connection_error}, '
-              f'oauth:{connect_response.oauth_error}')
         self.assertTrue(len(connect_response.settings_error) > 0 or len(connect_response.connection_error) > 0
                         or len(connect_response.oauth_error) > 0)
 
@@ -86,37 +83,27 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
 
         settings = get_settings()
         settings_json = json.dumps(settings, cls=SettingsEncoder)
-        print(f'settings json:{settings_json}')
         connect_request = pb2.ConnectRequest(settings_json=settings_json, oauth_state_json='')
-        print('connect request created..')
         stub.Connect(connect_request)
-
-        print('connect response..')
 
         request = pb2.DiscoverSchemasRequest(mode=pb2.DiscoverSchemasRequest.Mode.ALL, sample_size=10)
         response = stub.DiscoverSchemas(request)
 
-        print(f'{datetime.datetime.now()} final response: {len(response.schemas)}')
         self.assertIsInstance(response, pb2.DiscoverSchemasResponse)
         self.assertEqual(47, len(response.schemas))
 
         schema = response.schemas[0]
-        print(f'schema is:{schema.id}, name:{schema.name}, query:{schema.query}, sample:{len(schema.sample)}, '
-              f'properties:{len(schema.properties)}')
-        print(f'schema test done....')
         self.assertEqual(schema.id, 'share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers')
         self.assertEqual(schema.name, 'share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers')
         self.assertEqual(len(schema.sample), 10)
         self.assertEqual(len(schema.properties), 23)
 
         column = schema.properties[0]
-        print(f'column:{column.id}, name:{column.name}, type:{column.type}')
         self.assertEqual(column.id, 'organization_internal_id')
         self.assertEqual(column.name, 'organization_internal_id')
         self.assertEqual(column.type, pb2.PropertyType.STRING)
 
         column = schema.properties[22]
-        print(f'column:{column.id}, name:{column.name}, type:{column.type}')
         self.assertEqual(column.id, 'Extraction_Run_Date')
         self.assertEqual(column.name, 'Extraction_Run_Date')
         self.assertEqual(column.type, pb2.PropertyType.DATETIME)
@@ -130,39 +117,29 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
 
         settings = get_settings()
         settings_json = json.dumps(settings, cls=SettingsEncoder)
-        print(f'settings json:{settings_json}')
         connect_request = pb2.ConnectRequest(settings_json=settings_json, oauth_state_json='')
-        print('connect request created..')
         stub.Connect(connect_request)
 
-        print('connect response..')
         refresh_schema = pb2.Schema(id='share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers')
 
         request = pb2.DiscoverSchemasRequest(mode=pb2.DiscoverSchemasRequest.Mode.REFRESH, to_refresh=[refresh_schema],
                                              sample_size=5)
         response = stub.DiscoverSchemas(request)
 
-        print(f'{datetime.datetime.now()} final response: {len(response.schemas)}')
         self.assertIsInstance(response, pb2.DiscoverSchemasResponse)
         self.assertEqual(1, len(response.schemas))
 
         schema = response.schemas[0]
-        print(f'schema is:{schema.id}, name:{schema.name}, query:{schema.query}, sample:{len(schema.sample)}, '
-              f'properties:{len(schema.properties)}')
-        print(f'schema test done....')
         self.assertEqual(schema.id, 'share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers')
-        # self.assertEqual(schema.name, 'share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers')
         self.assertEqual(len(schema.sample), 5)
         self.assertEqual(len(schema.properties), 23)
 
         column = schema.properties[0]
-        print(f'column:{column.id}, name:{column.name}, type:{column.type}')
         self.assertEqual(column.id, 'organization_internal_id')
         self.assertEqual(column.name, 'organization_internal_id')
         self.assertEqual(column.type, pb2.PropertyType.STRING)
 
         column = schema.properties[22]
-        print(f'column:{column.id}, name:{column.name}, type:{column.type}')
         self.assertEqual(column.id, 'Extraction_Run_Date')
         self.assertEqual(column.name, 'Extraction_Run_Date')
         self.assertEqual(column.type, pb2.PropertyType.DATETIME)
@@ -176,12 +153,9 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
 
         settings = get_settings()
         settings_json = json.dumps(settings, cls=SettingsEncoder)
-        print(f'settings json:{settings_json}')
         connect_request = pb2.ConnectRequest(settings_json=settings_json, oauth_state_json='')
-        print('connect request created..')
         stub.Connect(connect_request)
 
-        print('connect response..')
         refresh_schemas = [pb2.Schema(id='share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers'),
                            pb2.Schema(id='share_safe_1_credi.dataaccess_schema.da_monthly_debt')]
 
@@ -189,27 +163,20 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
                                              sample_size=5)
         response = stub.DiscoverSchemas(request)
 
-        print(f'{datetime.datetime.now()} final response: {len(response.schemas)}')
         self.assertIsInstance(response, pb2.DiscoverSchemasResponse)
         self.assertEqual(2, len(response.schemas))
 
         schema = response.schemas[0]
-        print(f'schema is:{schema.id}, name:{schema.name}, query:{schema.query}, sample:{len(schema.sample)}, '
-              f'properties:{len(schema.properties)}')
-        print(f'schema test done....')
         self.assertEqual(schema.id, 'share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers')
-        # self.assertEqual(schema.name, 'share_safe_1_credi.dataaccess_schema.da_consumer_loan_officers')
         self.assertEqual(len(schema.sample), 5)
         self.assertEqual(len(schema.properties), 23)
 
         column = schema.properties[0]
-        print(f'column:{column.id}, name:{column.name}, type:{column.type}')
         self.assertEqual(column.id, 'organization_internal_id')
         self.assertEqual(column.name, 'organization_internal_id')
         self.assertEqual(column.type, pb2.PropertyType.STRING)
 
         column = schema.properties[22]
-        print(f'column:{column.id}, name:{column.name}, type:{column.type}')
         self.assertEqual(column.id, 'Extraction_Run_Date')
         self.assertEqual(column.name, 'Extraction_Run_Date')
         self.assertEqual(column.type, pb2.PropertyType.DATETIME)
@@ -256,7 +223,4 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
 
 if __name__ == '__main__':
     DeltaSharingIntegrationTestClient.grpc_port = 36657  # edit the port where server starts
-    print(
-        f'{datetime.datetime.now()} Server started....now listen to channel at port:{DeltaSharingIntegrationTestClient.grpc_port}')
-    # DeltaSharingIntegrationTestClient.discover_all_schemas_test(grpc_port)
     unittest.main()
