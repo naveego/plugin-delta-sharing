@@ -128,7 +128,7 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
                 discover_schemas_response.schemas.extend(schemas)
                 # self.__logger.info(f'Schemas returned: {len(schemas)}')
             except Exception as e:
-                self.__logger.error(str(e))
+                self.__logger.error(str(e), context)
             return discover_schemas_response
 
         try:
@@ -140,7 +140,7 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
 
             self.__logger.info(f'schemas returned: {len(discover_schemas_response.schemas)}')
         except Exception as e:
-            self.__logger.error(str(e))
+            self.__logger.error(str(e), context)
         return discover_schemas_response
 
     def DiscoverShapes(self, request, context):
@@ -171,7 +171,7 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
                 yield record
 
         except Exception as e:
-            self.__logger.error(str(e))
+            self.__logger.error(str(e), context)
 
 
 def create_directory(dir_path):
