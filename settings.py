@@ -14,7 +14,6 @@ class Settings:
         self.bearer_token = bearer_token.strip()
 
     def validate(self):
-        # print(self.to_string())
         incomplete_profile = True if self.share_credentials_version < 0 or len(self.endpoint) == 0 or len(
             self.bearer_token) == 0 else False
         if len(self.profile_file_path) == 0 and incomplete_profile:
@@ -31,11 +30,11 @@ class Settings:
             # get last part of the endpoint
             account = self.endpoint.rsplit('/', 1)[-1]
             file_path = f'config/{account}.share'
-            print(f'file name:{file_path}')
+
             profile_dict = {'shareCredentialsVersion': self.share_credentials_version, 'bearerToken': self.bearer_token,
                             'endpoint': self.endpoint}
             data_to_write = json.dumps(profile_dict)
-            print(f'data to write:{data_to_write}')
+
             with open(file_path, 'w') as f:
                 f.write(data_to_write)
             self.profile_file_path = file_path

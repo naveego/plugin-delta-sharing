@@ -24,53 +24,11 @@ def get_type(data_type: str) -> pb2.PropertyType:
         print(f'in get type:{e}')
 
 
-# def get_all_schemas(api_client_factory: ApiClientFactory, sample_size: int = 5):
-#     api_client = api_client_factory.get_api_client()
-#     schemas = []
-#     tables = api_client.sharing_client.list_all_tables()
-#     for table in tables:
-#         schema_id = f'{table.share}.{table.schema}.{table.name}'
-#         print(f'schema:{schema_id}')
-#         schema = pb2.Schema(id=schema_id, name=schema_id, data_flow_direction=pb2.Schema.DataFlowDirection.READ)
-#
-#         table_url = api_client.profile_file + f'#{schema_id}'
-#         print(f'table url:{table_url}')
-#         df = delta_sharing.load_as_pandas(table_url, limit=0)
-#         print(f'processing table:{schema.id}, number of columns:{len(df.columns)}')
-#         try:
-#             for col in df.columns:
-#                 type_at_source = str(df[col].dtype)
-#                 # print(f'column:{col}, data type:{type_at_source}')
-#                 type_at_dest = get_type(type_at_source)
-#                 # print(f'type at dest:{type_at_dest}, data type:{type(type_at_dest)}, check:{type(pb2.PropertyType.STRING)}')
-#                 column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
-#                 # print(f'column property created:{type(column_property)}')
-#                 schema.properties.append(column_property)
-#                 # print(f'properties extended')
-#         except Exception as e:
-#             print(f'error in discover:{e}')
-#
-#         try:
-#             print(f'going to read records')
-#             records = read_records(api_client_factory, schema, limit=sample_size)
-#             print(f'got records from the read API')
-#             schema.sample.extend(records)
-#         except Exception as e:
-#             print(f'error in read sample:{e}')
-#
-#         schemas.append(schema)
-#     return schemas
-
 def read_df(table_url, limit):
-    print(f'in read dataframes..')
-    # print(f'is schema null:{schema.id}')
-    # table_url = api_client_factory.get_api_client().profile_file + f'#{schema.id}'
-    print(f'table url in read records:{table_url}')
     if limit < 0:
         df = delta_sharing.load_as_pandas(table_url)
     else:
         df = delta_sharing.load_as_pandas(table_url, limit=limit)
-    print(f'come back from delta api: {len(df)}')
     return df
 
 
@@ -86,11 +44,9 @@ def get_all_schemas_concurrent(api_client_factory: ApiClientFactory, sample_size
         futures = []
         for table in tables:
             schema_id = f'{table.share}.{table.schema}.{table.name}'
-            print(f'schema:{schema_id}')
             schema = pb2.Schema(id=schema_id, name=schema_id, data_flow_direction=pb2.Schema.DataFlowDirection.READ)
 
             table_url = api_client.profile_file + f'#{schema_id}'
-            print(f'table url:{table_url}, sample size:{sample_size}')
 
             future = executor.submit(read_df, table_url, sample_size)
             futures.append(future)
@@ -99,20 +55,14 @@ def get_all_schemas_concurrent(api_client_factory: ApiClientFactory, sample_size
         wait(futures)
 
         for idx, future in enumerate(futures):
-            print(type(future.result()))
             df = future.result()
-            print(f'processing table:{schema.id}, number of columns:{len(df.columns)}, number of rows:{len(df)}')
             schema = schemas[idx]
             try:
                 for col in df.columns:
                     type_at_source = str(df[col].dtype)
-                    # print(f'column:{col}, data type:{type_at_source}')
                     type_at_dest = get_type(type_at_source)
-                    # print(f'type at dest:{type_at_dest}, data type:{type(type_at_dest)}, check:{type(pb2.PropertyType.STRING)}')
                     column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
-                    # print(f'column property created:{type(column_property)}')
                     schema.properties.append(column_property)
-                    # print(f'properties extended')
 
                 for index, record in df.iterrows():
                     data = json.dumps(record.to_dict(), default=str)
@@ -134,25 +84,18 @@ def get_all_schemas(api_client_factory: ApiClientFactory, sample_size: int = 5):
 
     for table in tables:
         schema_id = f'{table.share}.{table.schema}.{table.name}'
-        print(f'schema:{schema_id}')
         schema = pb2.Schema(id=schema_id, name=schema_id, data_flow_direction=pb2.Schema.DataFlowDirection.READ)
         schemas.append(schema)
 
         table_url = api_client.profile_file + f'#{schema_id}'
-        print(f'table url:{table_url}, sample size:{sample_size}')
 
         df = read_df(table_url, sample_size)
-        print(f'processing table:{schema.id}, number of columns:{len(df.columns)}, number of rows:{len(df)}')
         try:
             for col in df.columns:
                 type_at_source = str(df[col].dtype)
-                # print(f'column:{col}, data type:{type_at_source}')
                 type_at_dest = get_type(type_at_source)
-                # print(f'type at dest:{type_at_dest}, data type:{type(type_at_dest)}, check:{type(pb2.PropertyType.STRING)}')
                 column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
-                # print(f'column property created:{type(column_property)}')
                 schema.properties.append(column_property)
-                # print(f'properties extended')
 
             for index, record in df.iterrows():
                 data = json.dumps(record.to_dict(), default=str)
@@ -176,13 +119,9 @@ def get_refresh_schema_for_table(api_client_factory: ApiClientFactory, schema, s
     try:
         for col in df.columns:
             type_at_source = str(df[col].dtype)
-            # print(f'column:{col}, data type:{type_at_source}')
             type_at_dest = get_type(type_at_source)
-            # print(f'type at dest:{type_at_dest}, data type:{type(type_at_dest)}, check:{type(pb2.PropertyType.STRING)}')
             column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
-            # print(f'column property created:{type(column_property)}')
             schema.properties.append(column_property)
-            # print(f'properties extended')
 
         for index, record in df.iterrows():
             data = json.dumps(record.to_dict(), default=str)

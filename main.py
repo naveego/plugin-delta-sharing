@@ -8,7 +8,7 @@ from plugin_service import Plugin
 
 if __name__ == '__main__':
 
-    # logger = PluginLogger()
+    logger = PluginLogger()
 
     try:
 
@@ -21,16 +21,16 @@ if __name__ == '__main__':
         # write out the connection information for the Hashicorp plugin runner
         output = f'1|1|tcp|localhost:{port}|grpc'
         print(output)
-        # logger.info(f'Started on port {port}')
+        logger.info(f'Started on port {port}')
 
         # wait to exit while given input
         input()
 
-        # logger.info('Plugin exiting.....')
+        logger.info('Plugin exiting.....')
 
         # shutdown server
         server.wait_for_termination(3)
 
     except Exception as e:
-        # logger.error(str(e))
+        logger.error(str(e))
         raise Exception('Error in running plugin server')

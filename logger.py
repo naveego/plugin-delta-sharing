@@ -11,24 +11,19 @@ class PluginLogger:
 
     def __init__(self, name: str = '', log_path: str = 'logs'):
         self.__log_prefix: str = ''
-        # self.__file_name: str = pathlib.PurePath(sys.path[1]).name + "-log.txt"
         self.__file_name: str = os.path.basename(os.getcwd()) + "-log.txt"
         self.__level = pb2.LogLevel.Info
-
-        # if not name:
-        #     name = self.__file_name
 
         if not log_path:
             log_path = 'logs'
 
-        # print(f'name:{name}, path:{log_path}')
         # ensure log directory exists
         pathlib.Path(log_path).mkdir(parents=True, exist_ok=True)
 
         # setup logger
         self.__logger = logging.getLogger(name)
         self.__logger.setLevel(logging.INFO)
-        # self.__logger.propagate(False)
+        self.__logger.propagate(False)
         formatter = logging.Formatter(
             "%(asctime)s [%(levelname)s] %(message)s", '%Y-%m-%d %H:%M:%S %z'
         )
@@ -36,7 +31,6 @@ class PluginLogger:
                                                             interval=1, backupCount=10)
         handler.setFormatter(formatter)
         self.__logger.addHandler(handler)
-        print(f'logger name:{self.__logger.name}')
 
     def __map_log_level(self):
         # Error = 0;
@@ -88,7 +82,6 @@ if __name__ == '__main__':
     logger.debug(f'{datetime.now()} - this is a debug message')
     logger.info(f'{datetime.now()} - this is a info message')
     logger.error(f'{datetime.now()} - this is a error message')
-    # logger.debug(f'{datetime.now()} - this is a debug message')
 
     logger.set_log_level(pb2.LogLevel.Debug)
     logger.debug(f'{datetime.now()} - this is 2nd debug message')
