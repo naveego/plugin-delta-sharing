@@ -27,18 +27,23 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
         # temporary_directory = 4;
         # data_versions = 5;
 
-        # ensure all directories are created
-        create_directory(request.temporary_directory)
-        create_directory(request.permanent_directory)
-        create_directory(request.log_directory)
+        try:
+            # ensure all directories are created
+            create_directory(request.temporary_directory)
+            create_directory(request.permanent_directory)
+            create_directory(request.log_directory)
 
-        self.__logger = PluginLogger(request.log_directory)
-        self.__logger.set_log_level(request.log_level)
+            self.__logger = PluginLogger(log_path=request.log_directory)
+            # self.__logger.set_log_level(request.log_level)
 
-        self.__server.config = request
+            self.__server.config = request
 
-        self.__logger.info(f'temp:{request.temporary_directory}, perm:{request.permanent_directory}, log dir:{request.log_directory}')
-
+            self.__logger.info(f'temp:{request.temporary_directory}, perm:{request.permanent_directory}, '
+                               f'log dir:{request.log_directory}, log level:{request.log_level}')
+            print(f'temp:{request.temporary_directory}, perm:{request.permanent_directory}, '
+                  f'log dir:{request.log_directory}, log level:{request.log_level}')
+        except Exception as e:
+            print(f'error in configure:{e}')
         return pb2.ConfigureResponse()
 
     def Connect(self, request, context):
@@ -89,6 +94,13 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
         return pb2.ConnectResponse(settings_error='', connection_error='', oauth_error='',
                                    oauth_state_json=request.oauth_state_json)
 
+    def ConnectSession(self, request, context):
+        self.__logger.set_log_prefix('connect_session')
+        self.__logger.info('Connecting session...')
+
+        yield self.Connect(request, context)
+        self.__logger.info('Session Connected.')
+
     def DiscoverSchemas(self, request, context):
 
         # enum Mode
@@ -130,6 +142,15 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
         except Exception as e:
             self.__logger.error(str(e))
         return discover_schemas_response
+
+    def DiscoverShapes(self, request, context):
+        return pb2.DiscoverSchemasResponse()
+
+    def Disconnect(self, request, context):
+        self.__server.connected = False
+        self.__server.settings = None
+        self.__logger.info('Disconnected')
+        return pb2.DisconnectResponse()
 
     def ReadStream(self, request, context):
         try:

@@ -15,8 +15,11 @@ class PluginLogger:
         self.__file_name: str = os.path.basename(os.getcwd()) + "-log.txt"
         self.__level = pb2.LogLevel.Info
 
-        if not name:
-            name = self.__file_name
+        # if not name:
+        #     name = self.__file_name
+
+        if not log_path:
+            log_path = 'logs'
 
         # print(f'name:{name}, path:{log_path}')
         # ensure log directory exists
@@ -33,6 +36,7 @@ class PluginLogger:
                                                             interval=1, backupCount=10)
         handler.setFormatter(formatter)
         self.__logger.addHandler(handler)
+        print(f'logger name:{self.__logger.name}')
 
     def __map_log_level(self):
         # Error = 0;

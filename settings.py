@@ -14,7 +14,7 @@ class Settings:
         self.bearer_token = bearer_token.strip()
 
     def validate(self):
-        print(self.to_string())
+        # print(self.to_string())
         incomplete_profile = True if self.share_credentials_version < 0 or len(self.endpoint) == 0 or len(
             self.bearer_token) == 0 else False
         if len(self.profile_file_path) == 0 and incomplete_profile:

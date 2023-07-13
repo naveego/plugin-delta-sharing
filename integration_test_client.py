@@ -32,7 +32,8 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
         stub = pb2_grpc.PublisherStub(channel)
 
         configure_request = pb2.ConfigureRequest()
-        stub.Configure(configure_request)
+        config_response = stub.Configure(configure_request)
+        self.assertIsInstance(config_response, pb2.ConfigureResponse)
 
         settings = get_settings()
         settings_json = json.dumps(settings, cls=SettingsEncoder)
@@ -254,7 +255,7 @@ class DeltaSharingIntegrationTestClient(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    DeltaSharingIntegrationTestClient.grpc_port = 41467  # edit the port where server starts
+    DeltaSharingIntegrationTestClient.grpc_port = 36657  # edit the port where server starts
     print(
         f'{datetime.datetime.now()} Server started....now listen to channel at port:{DeltaSharingIntegrationTestClient.grpc_port}')
     # DeltaSharingIntegrationTestClient.discover_all_schemas_test(grpc_port)

@@ -15,97 +15,97 @@ class PublisherStub(object):
             channel: A grpc.Channel.
         """
         self.Configure = channel.unary_unary(
-                '/Publisher/Configure',
+                '/pub.Publisher/Configure',
                 request_serializer=publisher__pb2.ConfigureRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConfigureResponse.FromString,
                 )
         self.Connect = channel.unary_unary(
-                '/Publisher/Connect',
+                '/pub.Publisher/Connect',
                 request_serializer=publisher__pb2.ConnectRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConnectResponse.FromString,
                 )
         self.ConnectSession = channel.unary_stream(
-                '/Publisher/ConnectSession',
+                '/pub.Publisher/ConnectSession',
                 request_serializer=publisher__pb2.ConnectRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConnectResponse.FromString,
                 )
         self.DiscoverShapes = channel.unary_unary(
-                '/Publisher/DiscoverShapes',
+                '/pub.Publisher/DiscoverShapes',
                 request_serializer=publisher__pb2.DiscoverSchemasRequest.SerializeToString,
                 response_deserializer=publisher__pb2.DiscoverSchemasResponse.FromString,
                 )
         self.DiscoverSchemas = channel.unary_unary(
-                '/Publisher/DiscoverSchemas',
+                '/pub.Publisher/DiscoverSchemas',
                 request_serializer=publisher__pb2.DiscoverSchemasRequest.SerializeToString,
                 response_deserializer=publisher__pb2.DiscoverSchemasResponse.FromString,
                 )
         self.DiscoverSchemasStream = channel.unary_stream(
-                '/Publisher/DiscoverSchemasStream',
+                '/pub.Publisher/DiscoverSchemasStream',
                 request_serializer=publisher__pb2.DiscoverSchemasRequest.SerializeToString,
                 response_deserializer=publisher__pb2.Schema.FromString,
                 )
         self.PublishStream = channel.unary_stream(
-                '/Publisher/PublishStream',
+                '/pub.Publisher/PublishStream',
                 request_serializer=publisher__pb2.ReadRequest.SerializeToString,
                 response_deserializer=publisher__pb2.Record.FromString,
                 )
         self.ReadStream = channel.unary_stream(
-                '/Publisher/ReadStream',
+                '/pub.Publisher/ReadStream',
                 request_serializer=publisher__pb2.ReadRequest.SerializeToString,
                 response_deserializer=publisher__pb2.Record.FromString,
                 )
         self.Disconnect = channel.unary_unary(
-                '/Publisher/Disconnect',
+                '/pub.Publisher/Disconnect',
                 request_serializer=publisher__pb2.DisconnectRequest.SerializeToString,
                 response_deserializer=publisher__pb2.DisconnectResponse.FromString,
                 )
         self.ConfigureConnection = channel.unary_unary(
-                '/Publisher/ConfigureConnection',
+                '/pub.Publisher/ConfigureConnection',
                 request_serializer=publisher__pb2.ConfigureConnectionRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConfigureConnectionResponse.FromString,
                 )
         self.ConfigureQuery = channel.unary_unary(
-                '/Publisher/ConfigureQuery',
+                '/pub.Publisher/ConfigureQuery',
                 request_serializer=publisher__pb2.ConfigureQueryRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConfigureQueryResponse.FromString,
                 )
         self.ConfigureRealTime = channel.unary_unary(
-                '/Publisher/ConfigureRealTime',
+                '/pub.Publisher/ConfigureRealTime',
                 request_serializer=publisher__pb2.ConfigureRealTimeRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConfigureRealTimeResponse.FromString,
                 )
         self.BeginOAuthFlow = channel.unary_unary(
-                '/Publisher/BeginOAuthFlow',
+                '/pub.Publisher/BeginOAuthFlow',
                 request_serializer=publisher__pb2.BeginOAuthFlowRequest.SerializeToString,
                 response_deserializer=publisher__pb2.BeginOAuthFlowResponse.FromString,
                 )
         self.CompleteOAuthFlow = channel.unary_unary(
-                '/Publisher/CompleteOAuthFlow',
+                '/pub.Publisher/CompleteOAuthFlow',
                 request_serializer=publisher__pb2.CompleteOAuthFlowRequest.SerializeToString,
                 response_deserializer=publisher__pb2.CompleteOAuthFlowResponse.FromString,
                 )
         self.ConfigureWrite = channel.unary_unary(
-                '/Publisher/ConfigureWrite',
+                '/pub.Publisher/ConfigureWrite',
                 request_serializer=publisher__pb2.ConfigureWriteRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConfigureWriteResponse.FromString,
                 )
         self.ConfigureReplication = channel.unary_unary(
-                '/Publisher/ConfigureReplication',
+                '/pub.Publisher/ConfigureReplication',
                 request_serializer=publisher__pb2.ConfigureReplicationRequest.SerializeToString,
                 response_deserializer=publisher__pb2.ConfigureReplicationResponse.FromString,
                 )
         self.PrepareWrite = channel.unary_unary(
-                '/Publisher/PrepareWrite',
+                '/pub.Publisher/PrepareWrite',
                 request_serializer=publisher__pb2.PrepareWriteRequest.SerializeToString,
                 response_deserializer=publisher__pb2.PrepareWriteResponse.FromString,
                 )
         self.WriteStream = channel.stream_stream(
-                '/Publisher/WriteStream',
+                '/pub.Publisher/WriteStream',
                 request_serializer=publisher__pb2.Record.SerializeToString,
                 response_deserializer=publisher__pb2.RecordAck.FromString,
                 )
         self.DiscoverRelatedEntities = channel.unary_unary(
-                '/Publisher/DiscoverRelatedEntities',
+                '/pub.Publisher/DiscoverRelatedEntities',
                 request_serializer=publisher__pb2.DiscoverRelatedEntitiesRequest.SerializeToString,
                 response_deserializer=publisher__pb2.DiscoverRelatedEntitiesResponse.FromString,
                 )
@@ -143,7 +143,7 @@ class PublisherServicer(object):
     def DiscoverShapes(self, request, context):
         """DiscoverShapes requests a listing of schemas this publisher can provide
         records for.
-
+        
         Deprecated: Deprecated in API version 2. Implement DiscoverSchemasStream
         instead.
         """
@@ -155,7 +155,7 @@ class PublisherServicer(object):
         """Requests a listing of schemas this publisher can provide records for.
         New plugins should implement DiscoverSchemaStream and stream discovered
         schemes to the caller.
-
+        
         Deprecated: Deprecated in API version 2. Implement DiscoverSchemasStream
         instead.
         """
@@ -165,7 +165,7 @@ class PublisherServicer(object):
 
     def DiscoverSchemasStream(self, request, context):
         """Requests a stream of schemas this publisher can provide records for.
-
+        
         API Version: 3
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -175,7 +175,7 @@ class PublisherServicer(object):
     def PublishStream(self, request, context):
         """PublishStream begins streaming records to the client from the plugin.
         Implement ReadStream instead.
-
+        
         Deprecated: Deprecated in API Version 2. Implement ReadStream instead.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -383,7 +383,7 @@ def add_PublisherServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'Publisher', rpc_method_handlers)
+            'pub.Publisher', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -402,7 +402,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/Configure',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/Configure',
             publisher__pb2.ConfigureRequest.SerializeToString,
             publisher__pb2.ConfigureResponse.FromString,
             options, channel_credentials,
@@ -419,7 +419,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/Connect',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/Connect',
             publisher__pb2.ConnectRequest.SerializeToString,
             publisher__pb2.ConnectResponse.FromString,
             options, channel_credentials,
@@ -436,7 +436,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/Publisher/ConnectSession',
+        return grpc.experimental.unary_stream(request, target, '/pub.Publisher/ConnectSession',
             publisher__pb2.ConnectRequest.SerializeToString,
             publisher__pb2.ConnectResponse.FromString,
             options, channel_credentials,
@@ -453,7 +453,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/DiscoverShapes',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/DiscoverShapes',
             publisher__pb2.DiscoverSchemasRequest.SerializeToString,
             publisher__pb2.DiscoverSchemasResponse.FromString,
             options, channel_credentials,
@@ -470,7 +470,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/DiscoverSchemas',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/DiscoverSchemas',
             publisher__pb2.DiscoverSchemasRequest.SerializeToString,
             publisher__pb2.DiscoverSchemasResponse.FromString,
             options, channel_credentials,
@@ -487,7 +487,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/Publisher/DiscoverSchemasStream',
+        return grpc.experimental.unary_stream(request, target, '/pub.Publisher/DiscoverSchemasStream',
             publisher__pb2.DiscoverSchemasRequest.SerializeToString,
             publisher__pb2.Schema.FromString,
             options, channel_credentials,
@@ -504,7 +504,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/Publisher/PublishStream',
+        return grpc.experimental.unary_stream(request, target, '/pub.Publisher/PublishStream',
             publisher__pb2.ReadRequest.SerializeToString,
             publisher__pb2.Record.FromString,
             options, channel_credentials,
@@ -521,7 +521,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/Publisher/ReadStream',
+        return grpc.experimental.unary_stream(request, target, '/pub.Publisher/ReadStream',
             publisher__pb2.ReadRequest.SerializeToString,
             publisher__pb2.Record.FromString,
             options, channel_credentials,
@@ -538,7 +538,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/Disconnect',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/Disconnect',
             publisher__pb2.DisconnectRequest.SerializeToString,
             publisher__pb2.DisconnectResponse.FromString,
             options, channel_credentials,
@@ -555,7 +555,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/ConfigureConnection',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/ConfigureConnection',
             publisher__pb2.ConfigureConnectionRequest.SerializeToString,
             publisher__pb2.ConfigureConnectionResponse.FromString,
             options, channel_credentials,
@@ -572,7 +572,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/ConfigureQuery',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/ConfigureQuery',
             publisher__pb2.ConfigureQueryRequest.SerializeToString,
             publisher__pb2.ConfigureQueryResponse.FromString,
             options, channel_credentials,
@@ -589,7 +589,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/ConfigureRealTime',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/ConfigureRealTime',
             publisher__pb2.ConfigureRealTimeRequest.SerializeToString,
             publisher__pb2.ConfigureRealTimeResponse.FromString,
             options, channel_credentials,
@@ -606,7 +606,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/BeginOAuthFlow',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/BeginOAuthFlow',
             publisher__pb2.BeginOAuthFlowRequest.SerializeToString,
             publisher__pb2.BeginOAuthFlowResponse.FromString,
             options, channel_credentials,
@@ -623,7 +623,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/CompleteOAuthFlow',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/CompleteOAuthFlow',
             publisher__pb2.CompleteOAuthFlowRequest.SerializeToString,
             publisher__pb2.CompleteOAuthFlowResponse.FromString,
             options, channel_credentials,
@@ -640,7 +640,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/ConfigureWrite',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/ConfigureWrite',
             publisher__pb2.ConfigureWriteRequest.SerializeToString,
             publisher__pb2.ConfigureWriteResponse.FromString,
             options, channel_credentials,
@@ -657,7 +657,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/ConfigureReplication',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/ConfigureReplication',
             publisher__pb2.ConfigureReplicationRequest.SerializeToString,
             publisher__pb2.ConfigureReplicationResponse.FromString,
             options, channel_credentials,
@@ -674,7 +674,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/PrepareWrite',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/PrepareWrite',
             publisher__pb2.PrepareWriteRequest.SerializeToString,
             publisher__pb2.PrepareWriteResponse.FromString,
             options, channel_credentials,
@@ -691,7 +691,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/Publisher/WriteStream',
+        return grpc.experimental.stream_stream(request_iterator, target, '/pub.Publisher/WriteStream',
             publisher__pb2.Record.SerializeToString,
             publisher__pb2.RecordAck.FromString,
             options, channel_credentials,
@@ -708,7 +708,7 @@ class Publisher(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Publisher/DiscoverRelatedEntities',
+        return grpc.experimental.unary_unary(request, target, '/pub.Publisher/DiscoverRelatedEntities',
             publisher__pb2.DiscoverRelatedEntitiesRequest.SerializeToString,
             publisher__pb2.DiscoverRelatedEntitiesResponse.FromString,
             options, channel_credentials,
