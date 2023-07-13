@@ -138,7 +138,7 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
             schemas = get_refresh_schemas(self.__client_factory, refresh_schemas, sample_size)
             discover_schemas_response.schemas.extend(list(schemas))
 
-            self.__logger.info(f'schemas returned: {len(discover_schemas_response)}')
+            self.__logger.info(f'schemas returned: {len(discover_schemas_response.schemas)}')
         except Exception as e:
             self.__logger.error(str(e))
         return discover_schemas_response
