@@ -23,7 +23,7 @@ class PluginLogger:
         # setup logger
         self.__logger = logging.getLogger(name)
         self.__logger.setLevel(logging.INFO)
-        self.__logger.propagate(False)
+        # self.__logger.propagate(False)
         formatter = logging.Formatter(
             "%(asctime)s [%(levelname)s] %(message)s", '%Y-%m-%d %H:%M:%S %z'
         )
