@@ -1,3 +1,5 @@
+import sys
+
 import grpc
 
 import publisher_pb2_grpc as pb2_grpc
@@ -21,15 +23,16 @@ if __name__ == '__main__':
         # write out the connection information for the Hashicorp plugin runner
         output = f'1|1|tcp|localhost:{port}|grpc'
         print(output)
+        sys.stdout.flush()
         logger.info(f'Started on port {port}')
 
         # wait to exit while given input
-        input()
-
-        logger.info('Plugin exiting.....')
+        # input()
 
         # shutdown server
-        server.wait_for_termination(3)
+        server.wait_for_termination()
+
+        logger.info('Plugin exiting.....')
 
     except Exception as e:
         logger.error(str(e))

@@ -18,7 +18,7 @@ class Plugin(publisher_pb2_grpc.PublisherServicer):
     def __init__(self):
         self.__client_factory: ApiClientFactory = None
         self.__server: ServerStatus = ServerStatus()
-        self.__logger: PluginLogger = None
+        self.__logger: PluginLogger = PluginLogger()
 
     def Configure(self, request, context):
         try:
