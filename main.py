@@ -27,12 +27,12 @@ if __name__ == '__main__':
         logger.info(f'Started on port {port}')
 
         # wait to exit while given input
-        # input()
-
-        # shutdown server
-        server.wait_for_termination()
+        input()
 
         logger.info('Plugin exiting.....')
+
+        # shutdown server
+        server.wait_for_termination(1)
 
     except Exception as e:
         logger.error(str(e))
