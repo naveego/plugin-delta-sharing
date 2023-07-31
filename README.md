@@ -15,8 +15,8 @@ python3/python --version
 # Make sure pip or pip3 available in the env
 pip3/pip --version
 
-# Install python dependencies
+-- Install python dependencies
 pip3/pip install grpcio grpcio-tools delta-sharing pyinstaller
 
-# Create executables
+-- Create executables
 pyinstaller .\PluginDeltaSharing.spec
