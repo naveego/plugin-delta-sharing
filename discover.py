@@ -14,6 +14,8 @@ def get_type(data_type: str) -> pb2.PropertyType:
             return pb2.PropertyType.STRING
         elif 'float' in data_type:
             return pb2.PropertyType.FLOAT
+        elif 'int' in data_type:
+            return pb2.PropertyType.INTEGER
         elif 'datetime' in data_type:
             return pb2.PropertyType.DATETIME
         elif 'bool' in data_type:
