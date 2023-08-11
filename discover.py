@@ -5,6 +5,7 @@ from concurrent.futures import wait
 from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 import json
+import numpy
 
 
 def get_type(data_type: str) -> pb2.PropertyType:
@@ -31,6 +32,9 @@ def read_df(table_url, limit):
         df = delta_sharing.load_as_pandas(table_url)
     else:
         df = delta_sharing.load_as_pandas(table_url, limit=limit)
+
+    df = df.replace(numpy.nan, None)
+
     return df
 
 
