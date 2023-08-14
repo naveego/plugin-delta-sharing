@@ -12,7 +12,7 @@ def read_records(api_client_factory: ApiClientFactory, schema: pb2.Schema, limit
     else:
         df = delta_sharing.load_as_pandas(table_url, limit=limit)
 
-    df = df.replace({pd.NaT: None}).replace({np.NaN: None})
+    df = df.replace({pd.NaT: None}).replace(np.nan, None)
 
     for index, record in df.iterrows():
         data = json.dumps(record.to_dict(), default=str)

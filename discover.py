@@ -33,9 +33,6 @@ def read_df(table_url, limit):
         df = delta_sharing.load_as_pandas(table_url)
     else:
         df = delta_sharing.load_as_pandas(table_url, limit=limit)
-
-    df = df.replace({pd.NaT: None}).replace({np.NaN: None})
-
     return df
 
 
@@ -71,6 +68,8 @@ def get_all_schemas_concurrent(api_client_factory: ApiClientFactory, sample_size
                     column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
                     schema.properties.append(column_property)
 
+                df = df.replace({pd.NaT: None}).replace(np.nan, None)
+
                 for index, record in df.iterrows():
                     data = json.dumps(record.to_dict(), default=str)
                     record = pb2.Record(data_json=data)
@@ -104,6 +103,8 @@ def get_all_schemas(api_client_factory: ApiClientFactory, sample_size: int = 5):
                 column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
                 schema.properties.append(column_property)
 
+            df = df.replace({pd.NaT: None}).replace(np.nan, None)
+
             for index, record in df.iterrows():
                 data = json.dumps(record.to_dict(), default=str)
                 record = pb2.Record(data_json=data)
@@ -129,6 +130,8 @@ def get_refresh_schema_for_table(api_client_factory: ApiClientFactory, schema, s
             type_at_dest = get_type(type_at_source)
             column_property = pb2.Property(id=str(col), name=str(col), type=type_at_dest, type_at_source=type_at_source)
             schema.properties.append(column_property)
+
+        df = df.replace({pd.NaT: None}).replace(np.nan, None)
 
         for index, record in df.iterrows():
             data = json.dumps(record.to_dict(), default=str)
