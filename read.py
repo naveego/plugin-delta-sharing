@@ -2,8 +2,8 @@ import delta_sharing
 import json
 import publisher_pb2 as pb2
 from api_client_factory import ApiClientFactory
-import numpy
-
+import numpy as np
+import pandas as pd
 
 def read_records(api_client_factory: ApiClientFactory, schema: pb2.Schema, limit: int = 0):
     table_url = api_client_factory.get_api_client().profile_file + f'#{schema.id}'
@@ -12,7 +12,7 @@ def read_records(api_client_factory: ApiClientFactory, schema: pb2.Schema, limit
     else:
         df = delta_sharing.load_as_pandas(table_url, limit=limit)
 
-    df = df.replace(numpy.nan, None)
+    df = df.replace({pd.NaT: None}).replace({np.NaN: None})
 
     for index, record in df.iterrows():
         data = json.dumps(record.to_dict(), default=str)
